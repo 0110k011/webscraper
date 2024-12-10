@@ -25,7 +25,7 @@ public class NFParser {
         nfParserDto.setCorporateReason(getMatch(nf, "Dados\\sdo\\sEmitente.*?<span>(.*?)<"));
         nfParserDto.setName(getMatch(nf, "Fantasia.*?<span>(.*?)<"));
         nfParserDto.setCnpj(getMatch(nf, "CNPJ<.*?<span>(.*?)<"));
-        String paymentType = getMatch(nf, "Valor\\sdo\\sPagamento.*?40\\W{3}><span>(?:\\Wn\\s*(\\d.*?)\\s|(\\d.*?)<)");
+        String paymentType = getMatch(nf, "Valor\\sdo\\sPagamento.*?40\\W{3}><span>(?:\\Wn\\s*|)(\\d.*?)[<|\\s]");
         if (paymentType != null) {
             nfParserDto.setPaymentType(PaymentTypeEnum.fromValue(Integer.parseInt(paymentType)));
         }
