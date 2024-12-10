@@ -2,9 +2,11 @@ package com.k.webscraper;
 
 import com.k.webscraper.dtos.NFParsedDto;
 import com.k.webscraper.dtos.ProductServiceDataDto;
+import com.k.webscraper.enums.PaymentTypeEnum;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,7 +25,7 @@ public class NFParser {
         nfParserDto.setCorporateReason(getMatch(nf, "Dados\\sdo\\sEmitente.*?<span>(.*?)<"));
         nfParserDto.setName(getMatch(nf, "Fantasia.*?<span>(.*?)<"));
         nfParserDto.setCnpj(getMatch(nf, "CNPJ<.*?<span>(.*?)<"));
-        nfParserDto.setPaymentType(getMatch(nf, "Meio\\sde\\sPagamento.*?<span>\\Wn\\s*(.*?)\\Wn.*?<span>\\Wn\\s*(.*?)\\Wn"));
+        nfParserDto.setPaymentType(PaymentTypeEnum.fromValue(Integer.parseInt(Objects.requireNonNull(getMatch(nf, "Valor\\sdo\\sPagamento.*?40\\W{3}><span>(?:\\Wn\\s*(\\d.*?)\\s|(\\d.*?)<)")))));
 
         return nfParserDto;
     }
