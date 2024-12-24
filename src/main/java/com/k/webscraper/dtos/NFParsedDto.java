@@ -3,6 +3,7 @@ package com.k.webscraper.dtos;
 import com.k.webscraper.enums.PaymentTypeEnum;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,17 +15,19 @@ public class NFParsedDto {
     private String name;
     private String cnpj;
     private PaymentTypeEnum paymentType;
+    private LocalDateTime issueDate;
 
     public NFParsedDto() {
     }
 
-    public NFParsedDto(Set<ProductServiceDataDto> productServiceData, BigDecimal taxes, String corporateReason, String name, String cnpj, PaymentTypeEnum paymentType) {
+    public NFParsedDto(Set<ProductServiceDataDto> productServiceData, BigDecimal taxes, String corporateReason, String name, String cnpj, PaymentTypeEnum paymentType, LocalDateTime issueDate) {
         this.productServiceData = productServiceData;
         this.approximateTaxAmount = taxes;
         this.corporateReason = corporateReason;
         this.name = name;
         this.cnpj = cnpj;
         this.paymentType = paymentType;
+        this.issueDate = issueDate;
     }
 
     public Set<ProductServiceDataDto> getProductServiceData() {
@@ -73,5 +76,13 @@ public class NFParsedDto {
 
     public void setPaymentType(PaymentTypeEnum paymentType) {
         this.paymentType = paymentType;
+    }
+
+    public LocalDateTime getIssueDate() {
+        return issueDate;
+    }
+
+    public void setIssueDate(LocalDateTime issueDate) {
+        this.issueDate = issueDate;
     }
 }

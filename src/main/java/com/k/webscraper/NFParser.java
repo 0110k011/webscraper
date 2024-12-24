@@ -5,6 +5,8 @@ import com.k.webscraper.dtos.ProductServiceDataDto;
 import com.k.webscraper.enums.PaymentTypeEnum;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -25,6 +27,12 @@ public class NFParser {
         nfParserDto.setCorporateReason(getMatch(nf, "Dados\\sdo\\sEmitente.*?<span>(.*?)<"));
         nfParserDto.setName(getMatch(nf, "Fantasia.*?<span>(.*?)<"));
         nfParserDto.setCnpj(getMatch(nf, "CNPJ<.*?<span>(.*?)<"));
+
+        String issueDate = getMatch(nf, "(\\d{2}\\D\\d{2}\\D\\d{4}\\s\\d{2}\\D\\d{2}\\D\\d{2})");
+        if (issueDate != null) {
+            nfParserDto.setIssueDate(LocalDateTime.parse(issueDate.replaceAll("[/:\\s]", ""), DateTimeFormatter.ofPattern("ddMMyyyyHHmmss")));
+        }
+
         String paymentType = getMatch(nf, "Valor\\sdo\\sPagamento.*?40\\W{3}><span>(?:\\Wn\\s*|)(\\d.*?)[<|\\s]");
         if (paymentType != null) {
             nfParserDto.setPaymentType(PaymentTypeEnum.fromValue(Integer.parseInt(paymentType)));
