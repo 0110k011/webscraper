@@ -3,24 +3,26 @@ package com.k.webscraper;
 import com.k.webscraper.dtos.NFParsedDto;
 import com.k.webscraper.dtos.ProductServiceDataDto;
 import com.k.webscraper.enums.PaymentTypeEnum;
+import com.k.webscraper.exceptions.NFNotFoundException;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class NFParser {
 
-    public NFParsedDto getNFParsed(String html) {
+    public NFParsedDto getNFParsed(String html, String code) {
 
         NFParsedDto nfParserDto = new NFParsedDto();
 
         String nf = getMatch(html, "#xml-nfe-container.*?(<.*?/html>)");
-        if (nf == null) return null;
+        if (nf == null) {
+            throw new NFNotFoundException(code);
+        };
 
         nfParserDto.setProductServiceData(getProductServiceData(nf));
         nfParserDto.setApproximateTaxAmount(parseBigDecimal(getMatch(nf, "NFe<.*?os<.*?n>(.*?)<")));

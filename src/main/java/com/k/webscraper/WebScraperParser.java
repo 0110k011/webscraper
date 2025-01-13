@@ -2,6 +2,7 @@ package com.k.webscraper;
 
 import com.k.webscraper.contants.SefazConstants;
 import com.k.webscraper.dtos.NFParsedDto;
+import com.k.webscraper.exceptions.NFNotFoundException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -42,12 +43,15 @@ public class WebScraperParser {
     }
 
     public NFParsedDto getNFData(String code, String recaptcha) throws IOException {
+        try {
+            this.getWebData(String.format("%s%s?chaveAcesso=%s&g-recaptcha-response=%s", SefazConstants.SEFAZ_DOMAIN, SefazConstants.SEFAZ_IDENTIFICATION, code, recaptcha), false);
+            this.getWebData(String.format("%s%s?chaveAcesso=%s&g-recaptcha-response=%s", SefazConstants.SEFAZ_DOMAIN, SefazConstants.SEFAZ_CONSULT, code, recaptcha), false);
+            String html = this.getWebData(String.format("%s%s?chNFe=%s", SefazConstants.SEFAZ_DOMAIN, SefazConstants.SEFAZ_RENDER, code), true);
 
-        this.getWebData(String.format("%s%s?chaveAcesso=%s&g-recaptcha-response=%s", SefazConstants.SEFAZ_DOMAIN, SefazConstants.SEFAZ_IDENTIFICATION,code, recaptcha), false);
-        this.getWebData(String.format("%s%s?chaveAcesso=%s&g-recaptcha-response=%s", SefazConstants.SEFAZ_DOMAIN, SefazConstants.SEFAZ_CONSULT, code, recaptcha), false);
-        String html = this.getWebData(String.format("%s%s?chNFe=%s", SefazConstants.SEFAZ_DOMAIN, SefazConstants.SEFAZ_RENDER, code), true);
-
-        return new NFParser().getNFParsed(html);
+            return new NFParser().getNFParsed(html, code);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
